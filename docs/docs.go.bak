@@ -1,0 +1,6 @@
+	sInfo.Host = config.ServerHost
+	if config.RunMode == "debug" {
+		sInfo.Schemes = []string{"http"}
+	} else {
+		sInfo.Schemes = []string{"https", "http"}
+	}

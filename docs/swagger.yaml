@@ -1,0 +1,1254 @@
+basePath: /
+definitions:
+  entity.ChangePassword:
+    properties:
+      oldPassword:
+        type: string
+      password:
+        type: string
+      userId:
+        type: string
+      username:
+        type: string
+    type: object
+  entity.Login:
+    properties:
+      password:
+        type: string
+      userid:
+        type: string
+    type: object
+  service.Comment:
+    properties:
+      content:
+        type: string
+      topicid:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.DeleteComment:
+    properties:
+      commentid:
+        type: integer
+      topicid:
+        type: integer
+    type: object
+  service.DeleteReply:
+    properties:
+      replyid:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.DeleteTopic:
+    properties:
+      sectionid:
+        type: integer
+      topic:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.Evaluate:
+    properties:
+      sectionid:
+        example: 1
+        type: integer
+      status:
+        example: 0
+        type: integer
+      type:
+        example: "1"
+        type: string
+      typeid:
+        example: 12345
+        type: integer
+      userid:
+        example: test
+        type: string
+    type: object
+  service.Favorite:
+    properties:
+      sectionid:
+        example: 1
+        type: integer
+      status:
+        example: 1
+        type: integer
+      type:
+        example: "234"
+        type: string
+      typeid:
+        example: 1
+        type: integer
+      userid:
+        example: test
+        type: string
+    type: object
+  service.Reply:
+    properties:
+      commentid:
+        type: integer
+      content:
+        type: string
+      pid:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.Topic:
+    properties:
+      content:
+        type: string
+      evaluateStatus:
+        type: integer
+      favoriteStatus:
+        type: integer
+      istop:
+        type: integer
+      sectionid:
+        type: integer
+      title:
+        type: string
+      userid:
+        type: string
+    type: object
+  service.UpdateComment:
+    properties:
+      commentid:
+        type: integer
+      content:
+        type: string
+    type: object
+  service.UpdateReply:
+    properties:
+      content:
+        type: string
+      replyid:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.UpdateTopic:
+    properties:
+      content:
+        type: string
+      istop:
+        type: integer
+      sectionid:
+        type: integer
+      title:
+        type: string
+      topic:
+        type: integer
+      userid:
+        type: string
+    type: object
+  service.User:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      emailverified:
+        type: integer
+      password:
+        type: string
+      sex:
+        type: integer
+      userid:
+        type: string
+      username:
+        type: string
+    type: object
+  utils.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  utils.Message:
+    properties:
+      code:
+        example: 1
+        type: integer
+      data:
+        type: object
+      message:
+        example: ok
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: revolveyao@qq.com
+    name: API支持者
+    url: http://www.swagger.io/support
+  description: 星辰大海后端API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: 星辰大海 API
+  version: "1.0"
+paths:
+  /v1/comment/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加评论
+      operationId: post-comment-add-json
+      parameters:
+      - description: 主题
+        in: body
+        name: comment
+        required: true
+        schema:
+          $ref: '#/definitions/service.Comment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加评论
+  /v1/comment/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除评论
+      operationId: get-topic-content-json
+      parameters:
+      - description: 删除评论传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.DeleteComment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除评论
+  /v1/comment/get:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据获取指定主题的评论
+      operationId: get-comment-page-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 排序方式
+        in: query
+        name: sort
+        type: string
+      - description: 主题ID
+        in: query
+        name: topicid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 获取评论
+  /v1/comment/get/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据获取指定主题的评论-带用户权限
+      operationId: get-comment-page-user-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 排序方式
+        in: query
+        name: sort
+        type: string
+      - description: 主题ID
+        in: query
+        name: topicid
+        required: true
+        type: integer
+      - description: 用户ID
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取评论-带用户
+  /v1/comment/update:
+    post:
+      consumes:
+      - application/json
+      description: 获取评论内容
+      operationId: get-topic-content-json
+      parameters:
+      - description: 更新评论传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.UpdateComment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新评论
+  /v1/login:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      - application/json
+      description: 登陆
+      operationId: login-main-json
+      parameters:
+      - description: 用户登陆信息
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 登陆
+  /v1/notice/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户名获取通知
+      operationId: get-notice-user-json
+      parameters:
+      - description: 用户名
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取通知
+  /v1/noticeread/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户名设置通知已读
+      operationId: set-notice-user-json
+      parameters:
+      - description: 用户名
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 设置通知已读
+  /v1/refresh_toekn:
+    get:
+      description: 刷新token
+      operationId: login-refresh-toekn-json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 刷新token
+  /v1/register:
+    post:
+      consumes:
+      - application/json
+      description: 注册用户
+      operationId: register-main-json
+      parameters:
+      - description: 用户注册信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/service.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 注册
+  /v1/reply/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加回复
+      operationId: post-reply-add-json
+      parameters:
+      - description: 回复
+        in: body
+        name: reply
+        required: true
+        schema:
+          $ref: '#/definitions/service.Reply'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加回复
+  /v1/reply/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除回复
+      operationId: get-topic-content-json
+      parameters:
+      - description: 删除回复传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.DeleteReply'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除回复
+  /v1/reply/get:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据获取指定评论的回复
+      operationId: get-reply-page-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 排序方式
+        in: query
+        name: sort
+        type: string
+      - description: 评论ID
+        in: query
+        name: commentid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 获取回复
+  /v1/reply/get/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据获取指定评论的回复-带有用户权限
+      operationId: get-reply-page-user-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 排序方式
+        in: query
+        name: sort
+        type: string
+      - description: 评论ID
+        in: query
+        name: commentid
+        required: true
+        type: integer
+      - description: 用户ID
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取回复-带用户
+  /v1/reply/update:
+    post:
+      consumes:
+      - application/json
+      description: 获取回复内容
+      operationId: get-topic-content-json
+      parameters:
+      - description: 更新回复传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.UpdateReply'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新回复
+  /v1/section/add:
+    get:
+      description: 添加板块
+      operationId: get-section-add-json
+      parameters:
+      - description: 板块名称
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加板块
+  /v1/section/all:
+    get:
+      description: 获取所有板块
+      operationId: get-section-all-json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 获取板块
+  /v1/topic/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加主题
+      operationId: post-topic-add-json
+      parameters:
+      - description: 主题
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.Topic'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加主题
+  /v1/topic/content/get:
+    get:
+      consumes:
+      - application/json
+      description: 获取主题内容
+      operationId: get-topic-content-json
+      parameters:
+      - description: 主题ID
+        in: query
+        name: topicid
+        required: true
+        type: integer
+      - description: 板块ID
+        in: query
+        name: sectionid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 获取主题内容
+  /v1/topic/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除主题
+      operationId: get-topic-content-json
+      parameters:
+      - description: 更新主题传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.DeleteTopic'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除主题
+  /v1/topic/get:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据指定板块获取主题
+      operationId: get-topic-page-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 板块ID
+        in: query
+        name: sectionid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: 获取主题
+  /v1/topic/get/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据页码等数据指定板块获取主题-带有用户权限
+      operationId: get-topic-page-user-json
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 页大小
+        in: query
+        name: pagesize
+        type: integer
+      - description: 总数
+        in: query
+        name: total
+        type: integer
+      - description: 板块ID
+        in: query
+        name: sectionid
+        required: true
+        type: integer
+      - description: 用户ID
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取主题-带用户
+  /v1/topic/update:
+    post:
+      consumes:
+      - application/json
+      description: 获取主题内容
+      operationId: get-topic-content-json
+      parameters:
+      - description: 更新主题传入json
+        in: body
+        name: topic
+        required: true
+        schema:
+          $ref: '#/definitions/service.UpdateTopic'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新主题
+  /v1/user/evaluate:
+    post:
+      consumes:
+      - application/json
+      description: 提交评价
+      operationId: set-evaluate-user-json
+      parameters:
+      - description: 评价传入数据
+        in: body
+        name: evaluate
+        required: true
+        schema:
+          $ref: '#/definitions/service.Evaluate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 提交评价
+  /v1/user/favorite:
+    post:
+      consumes:
+      - application/json
+      description: 提交收藏或取消收藏
+      operationId: set-favorite-user-json
+      parameters:
+      - description: 收藏传入数据
+        in: body
+        name: favorite
+        required: true
+        schema:
+          $ref: '#/definitions/service.Favorite'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 提交收藏
+  /v1/user/info/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: 根据用户id获取用户信息
+      operationId: get-user-info-json
+      parameters:
+      - description: 用户名
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户信息
+  /v1/user/updateinfo:
+    post:
+      consumes:
+      - application/json
+      description: 根据传过来的值修改用户信息
+      operationId: update-user-info-json
+      parameters:
+      - description: 用户注册信息
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/service.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改用户信息
+  /v1/user/updatepass:
+    post:
+      consumes:
+      - application/json
+      description: 根据传过来的值修改用户密码
+      operationId: update-user-password-json
+      parameters:
+      - description: 用户密码修改
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改用户密码
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
